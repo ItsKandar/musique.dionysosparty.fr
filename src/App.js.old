@@ -10,7 +10,7 @@ const CLIENT_SECRET = "0e906b9fd31e47d1a6e5f1c658fa7d67";
 function App() {
   const [searchInput, setSearchInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
-  const [tracks, setTracks] = useState([]);
+  const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
     // API access token
@@ -27,11 +27,6 @@ function App() {
       .then(data => setAccessToken(data.access_token))
   }, [])
 
-  // Demande d'ajout de musique
-  async function requestMusic() {
-    console.log("Demande d'ajout de la musique")
-  }
-
   // Recherche
   async function search() {
     console.log("Recherche de " + searchInput)
@@ -44,23 +39,27 @@ function App() {
         'Authorization' : 'Bearer ' + accessToken
       }
     }
+    var artistID = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist', searchParameters)
+      .then(response => response.json())
+      .then(data => { return data.artists.items[0].id })
 
-    // Fait une GET Request pour recuperer les titres correspondant a la recherche
-    var returnedTracks = await fetch('https://api.spotify.com/v1/search?q=' + searchInput + '&type=track&market=FR&limit=50', searchParameters)
+    console.log("ID de l'artiste : " + artistID)
+    // Fait une GET Request avec l'Artist ID pour recuperer les albums de l'artiste
+    var returnedAlbums= await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums' + '?include_groups=album,single&market=FR&limit=50', searchParameters)
       .then(response => response.json())
       .then(data => { 
-        console.log(data.tracks.items);
-        setTracks(data.tracks.items);
+        console.log(data);
+        setAlbums(data.items);
        })
-    // Affiche les titres
+    // Affiche les albums de l'artiste
   }
-  console.log(tracks);
+  console.log(albums);
   return (
     <div className="App">
       <Container>
         <InputGroup className="mb-3" size="lg">
           <FormControl
-            placeholder="Rechercher un titre"
+            placeholder="Rechercher un artiste"
             type="input"
             onKeyPress={event => {
               if (event.key == "Enter"){
@@ -76,24 +75,13 @@ function App() {
       </Container>
       <Container>
         <Row className="mx-2 row row-cols-4">
-          {tracks.map( (track, i) => {
-            console.log(track);
+          {albums.map( (album, i) => {
+            console.log(album);
             return (
               <Card>
-                <Card.Img src={track.album.images[0].url} />
+                <Card.Img src={album.images[0].url} />
                 <Card.Body>
-                  <Card.Title>{track.name}</Card.Title>
-                  <Card.Text>
-                    {track.artists[0].name} | {track.album.name} 
-                  </Card.Text>
-                  <Button href={track.external_urls.spotify} target="_blank">
-                    {/* ouvre la musique sur spotify ({track.external_urls.spotify}) */}
-                    Ecouter
-                  </Button>
-                  {/* Bouton pour demander l'ajout dans la playlist */}
-                  <Button onClick={requestMusic}>
-                    Demander l'ajout
-                  </Button>  
+                  <Card.Title>{album.name}</Card.Title>
                 </Card.Body>
               </Card>
             )
