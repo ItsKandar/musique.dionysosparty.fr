@@ -8,7 +8,7 @@ const CLIENT_ID = "24efa9b185c84f3abe1630d3b53d01a2";
 const CLIENT_SECRET = "0e906b9fd31e47d1a6e5f1c658fa7d67";
 
 function App() {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState("basique");
   const [accessToken, setAccessToken] = useState("");
   const [tracks, setTracks] = useState([]);
 
