@@ -36,7 +36,8 @@ function App() {
   async function search() {
     console.log("Recherche de " + searchInput)
 
-    // Fait une GET Request pour recuperer l'Artist ID
+    // Prepare les parametres de la recherche
+
     var searchParameters = {
       method : 'GET',
       headers : {
