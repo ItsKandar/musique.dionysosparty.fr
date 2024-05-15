@@ -1,3 +1,7 @@
+`npm install express sqlite3 body-parser cors react-router-dom`
+
+`node server.js`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
