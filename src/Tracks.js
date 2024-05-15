@@ -10,6 +10,12 @@ function Tracks() {
       .then(data => setTracks(data.tracks));
   }, []);
 
+  async function reloadTracks() {
+    fetch('http://localhost:3001/api/tracks')
+      .then(response => response.json())
+      .then(data => setTracks(data.tracks));
+  }
+
   async function approveMusic(track) {
     console.log("Approuver la musique")
     console.log(track)
@@ -23,6 +29,7 @@ function Tracks() {
 
     const data = await response.json();
     console.log(data);
+    reloadTracks();
   }
 
     async function rejectMusic(track) {
@@ -38,6 +45,23 @@ function Tracks() {
 
     const data = await response.json();
     console.log(data);
+    reloadTracks();
+    }
+
+    async function deleteMusic(track) {
+    console.log("Supprimer la musique")
+    console.log(track)
+    const response = await fetch('http://localhost:3001/api/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(track),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    reloadTracks();
     }
 
   return (
@@ -64,7 +88,10 @@ function Tracks() {
                     </Button> 
                     <Button class="btn btn-outline-danger" onClick={() => rejectMusic(track)}>
                         Refuser
-                    </Button> 
+                    </Button>
+                    <Button class="btn btn-outline-warning" onClick={() => deleteMusic(track)}> 
+                        Supprimer
+                    </Button>
                 </Card.Body>
             </Card>
             )

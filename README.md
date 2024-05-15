@@ -1,4 +1,5 @@
-`npm install express sqlite3 body-parser cors react-router-dom`
+# Dependecies
+`npm install express sqlite3 body-parser cors react-router-dom bcrypt jsonwebtoken`
 
 `node server.js`
 
