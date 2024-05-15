@@ -4,8 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, InputGroup, FormControl, Button, Row, Card} from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
-const CLIENT_ID = "24efa9b185c84f3abe1630d3b53d01a2";
-const CLIENT_SECRET = "0e906b9fd31e47d1a6e5f1c658fa7d67";
+const { CLIENT_ID, CLIENT_SECRET } = require('./secret');
 
 function App() {
   const [searchInput, setSearchInput] = useState("basique");
@@ -27,9 +26,10 @@ function App() {
       .then(data => setAccessToken(data.access_token))
   }, [])
 
-  // Demande d'ajout de musique
-  async function requestMusic() {
+  // Sauvegarde de la musique dans la database
+  async function requestMusic(music) {
     console.log("Demande d'ajout de la musique")
+    console.log(music)
   }
 
   // Recherche
@@ -87,12 +87,12 @@ function App() {
                   <Card.Text>
                     {track.artists[0].name} | {track.album.name} 
                   </Card.Text>
+                  {/* ouvre la musique sur spotify */}
                   <Button href={track.external_urls.spotify} target="_blank">
-                    {/* ouvre la musique sur spotify ({track.external_urls.spotify}) */}
                     Ecouter
                   </Button>
                   {/* Bouton pour demander l'ajout dans la playlist */}
-                  <Button onClick={requestMusic}>
+                  <Button onClick = {() => requestMusic(track)}>
                     Demander l'ajout
                   </Button>  
                 </Card.Body>
