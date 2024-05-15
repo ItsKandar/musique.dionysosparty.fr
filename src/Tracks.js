@@ -10,6 +10,36 @@ function Tracks() {
       .then(data => setTracks(data.tracks));
   }, []);
 
+  async function approveMusic(track) {
+    console.log("Approuver la musique")
+    console.log(track)
+    const response = await fetch('http://localhost:3001/api/approve', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(track),
+    });
+
+    const data = await response.json();
+    console.log(data);
+  }
+
+    async function rejectMusic(track) {
+    console.log("Refuser la musique")
+    console.log(track)
+    const response = await fetch('http://localhost:3001/api/reject', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(track),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    }
+
   return (
     <Container>
         <Row className="mx-2 row row-cols-4">
@@ -23,13 +53,16 @@ function Tracks() {
                     <Card.Text>
                         {track.artist} | {track.album}
                     </Card.Text>
-                    <Button href={track.url} target="_blank">
+                    <Card.Text>
+                        {track.status}
+                    </Card.Text>
+                    <Button href={track.url} target="_blank" class="btn btn-outline-primary">
                         Écouter
                     </Button>
-                    <Button class="btn btn-success">
+                    <Button class="btn btn-outline-success" onClick={() => approveMusic(track)}>
                         Approuver
                     </Button> 
-                    <Button class="btn btn-danger">
+                    <Button class="btn btn-outline-danger" onClick={() => rejectMusic(track)}>
                         Refuser
                     </Button> 
                 </Card.Body>

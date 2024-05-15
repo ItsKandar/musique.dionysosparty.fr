@@ -124,7 +124,7 @@ function App() {
                           <Button href={track.external_urls.spotify} target="_blank">
                             Ecouter
                           </Button>
-                          <Button onClick={() => requestMusic(track)}>
+                          <Button onClick={() => requestMusic(track)} class="btn btn-outline-success">
                             Demander l'ajout
                           </Button>
                         </Card.Body>
