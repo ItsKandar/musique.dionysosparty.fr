@@ -59,7 +59,6 @@ function App() {
     console.log("Recherche de " + searchInput)
 
     // Prepare les parametres de la recherche
-
     var searchParameters = {
       method : 'GET',
       headers : {
