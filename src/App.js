@@ -1,11 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
+import Logo from './logo.svg';
 import './App.css';
+import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, InputGroup, FormControl, Button, Row, Card, Nav } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Tracks from './Tracks';
+import Register from './Register'; // Import the Register component
+import Login from './Login'; // Import the Login component
 
 const { CLIENT_ID, CLIENT_SECRET } = require('./secret');
 
@@ -31,23 +34,28 @@ function App() {
 
   // Sauvegarde de la musique dans la database
   async function requestMusic(music) {
-    console.log("Demande d'ajout de la musique")
-    console.log(music)
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Merci de vous connecter pour demander l\'ajout d\'une musique');
+        return;
+    }
+    
     const trackData = {
-      id: music.id,
-      name: music.name,
-      artist: music.artists[0].name,
-      album: music.album.name,
-      url: music.external_urls.spotify,
-      image: music.album.images[0].url
+        id: music.id,
+        name: music.name,
+        artist: music.artists[0].name,
+        album: music.album.name,
+        url: music.external_urls.spotify,
+        image: music.album.images[0].url
     };
 
     const response = await fetch('http://localhost:3001/api/tracks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(trackData),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(trackData),
     });
 
     const data = await response.json();
@@ -59,6 +67,7 @@ function App() {
     console.log("Recherche de " + searchInput)
 
     // Prepare les parametres de la recherche
+
     var searchParameters = {
       method : 'GET',
       headers : {
@@ -82,11 +91,17 @@ function App() {
       <div className="App">
         <Container>
           <Nav className="mb-3">
-            <Nav.Item>
+          <Nav.Item>
               <Nav.Link as={Link} to="/">Rechercher</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={Link} to="/tracks">Consulter la base de données</Nav.Link>
+              </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/register">Register</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={Link} to="/tracks">Consulter la base de données</Nav.Link>
+              <Nav.Link as={Link} to="/login">Login</Nav.Link>
             </Nav.Item>
           </Nav>
         </Container>
@@ -135,6 +150,8 @@ function App() {
             </Container>
           } />
           <Route path="/tracks" element={<Tracks />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>
